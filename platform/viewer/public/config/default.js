@@ -1,33 +1,30 @@
 window.config = {
-  // default: '/'
-  routerBasename: '/',
-  extensions: [],
-  showStudyList: true,
-  filterQueryParam: false,
-  disableServersCache: false,
-  studyPrefetcher: {
-    enabled: true,
-    order: 'closest',
-    displaySetCount: 3,
-    preventCache: false,
-    prefetchDisplaySetsTimeout: 300,
-    maxNumPrefetchRequests: 100,
-    displayProgress: true,
-    includeActiveDisplaySet: true,
-  },
+  routerBasename: "/",
   servers: {
     dicomWeb: [
       {
         name: 'DCM4CHEE',
-        wadoUriRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/wado',
-        qidoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
-        wadoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoUriRoot: 'https://radiology.alldoq.com/dcm4chee-arc/aets/DCM4CHEE/wado',
+        qidoRoot: 'https://radiology.alldoq.com/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoRoot: 'https://radiology.alldoq.com/dcm4chee-arc/aets/DCM4CHEE/rs',
         qidoSupportsIncludeField: true,
-        imageRendering: 'wadors',
+        imageRendering: 'wadouri',
         thumbnailRendering: 'wadors',
-        enableStudyLazyLoad: true,
-        supportsFuzzyMatching: true,
+        requestOptions: {
+          requestFromBrowser: true,
+          auth: (options) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            debugger
+            const jwt = urlParams.get("jwt");
+
+            if (!localStorage.getItem('radJwt') || jwt) {
+              localStorage.setItem('radJwt', jwt);
+            }
+            return localStorage.getItem('radJwt')
+          }
+        }
       },
+
     ],
   },
 
@@ -135,6 +132,6 @@ window.config = {
   // If the server is particularly slow to respond to series metadata
   //  requests as it extracts the metadata from raw files everytime,
   //  try setting this to even lower value
-  // Leave it undefined for no limit, suitable for HTTP/2 enabled servers
+  // Leave it undefined for no limit, sutiable for HTTP/2 enabled servers
   // maxConcurrentMetadataRequests: 5,
 };

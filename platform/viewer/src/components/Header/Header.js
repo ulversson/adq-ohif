@@ -33,7 +33,7 @@ function Header(props) {
         onClick: () =>
           show({
             content: AboutContent,
-            title: t('OHIF Viewer - About'),
+            title: 'ALLDOQ PACS Viewer - about',
           }),
       },
       {
@@ -60,9 +60,12 @@ function Header(props) {
     setOptions(optionsValue);
   }, [setOptions, show, t, user, userManager]);
 
+  function backUrl() {
+    return `${window.location.origin}?patientName=${window.localStorage.getItem('patientName')}`
+  }
   return (
     <>
-      <div className="notification-bar">{t('INVESTIGATIONAL USE ONLY')}</div>
+      <div className="notification-bar"></div>
       <div
         className={classNames('entry-header', { 'header-big': useLargeLogo })}
       >
@@ -79,20 +82,14 @@ function Header(props) {
           {children}
 
           {hasLink && (
-            <Link
-              className="header-btn header-studyListLinkSection"
-              to={{
-                pathname: linkPath,
-                state: { studyLink: location.pathname },
-              }}
-            >
+            <a href={backUrl()} class="header-btn header-studyListLinkSection">
               {t(linkText)}
-            </Link>
+            </a>
           )}
         </div>
 
         <div className="header-menu">
-          <span className="research-use">{t('INVESTIGATIONAL USE ONLY')}</span>
+          <span className="research-use"></span>
           <Dropdown title={t('Options')} list={options} align="right" />
         </div>
       </div>

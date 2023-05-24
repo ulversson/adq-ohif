@@ -89,7 +89,8 @@ import youtube from './icons/youtube.svg';
 import eye from './icons/eye.svg';
 import eyeClosed from './icons/eye-closed.svg';
 import envelopeSquare from './icons/envelope-square.svg';
-
+import adqWhite from './icons/adq-white-cmyk.svg';
+import adqSymbol from './icons/adqs-white-cmyk.svg';
 const ICONS = {
   eye,
   'eye-closed': eyeClosed,
@@ -180,6 +181,8 @@ const ICONS = {
   liver,
   save: saveRegular,
   'envelope-square': envelopeSquare,
+  adqWhite,
+  adqSymbol
 };
 
 /**

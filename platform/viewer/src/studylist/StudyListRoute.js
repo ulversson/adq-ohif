@@ -21,6 +21,7 @@ import filesToStudies from '../lib/filesToStudies.js';
 import UserManagerContext from '../context/UserManagerContext';
 import WhiteLabelingContext from '../context/WhiteLabelingContext';
 import AppContext from '../context/AppContext';
+import { getParameterByName, removeParam } from '../utils/globals.js';
 
 const { urlUtil: UrlUtil } = OHIF.utils;
 
@@ -53,7 +54,7 @@ function StudyListRoute(props) {
     error: null,
   });
   const [activeModalId, setActiveModalId] = useState(null);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [pageNumber, setPageNumber] = useState(0);
   const appContext = useContext(AppContext);
   // ~~ RESPONSIVE
@@ -83,6 +84,7 @@ function StudyListRoute(props) {
   useEffect(
     () => {
       const fetchStudies = async () => {
+        setStorageFilter()
         try {
           setSearchStatus({ error: null, isSearchingForStudies: true });
 
@@ -97,6 +99,7 @@ function StudyListRoute(props) {
 
           setStudies(response);
           setSearchStatus({ error: null, isSearchingForStudies: false });
+          handleFilterChange('patientNameOrId', window.localStorage.patientName)
         } catch (error) {
           console.warn(error);
           setSearchStatus({ error: true, isFetching: false });
@@ -118,7 +121,13 @@ function StudyListRoute(props) {
       server,
     ]
   );
-
+  const setStorageFilter = () => {
+    const patientName = getParameterByName('patientName')
+    if (patientName) {
+      window.localStorage.setItem('patientName', patientName)
+      removeParam('patientName')
+    }
+  }
   // TODO: Update Server
   // if (this.props.server !== prevProps.server) {
   //   this.setState({
@@ -427,7 +436,7 @@ function _sortStudies(studies, field, order) {
   });
 
   // Sort by field
-  sortedStudies.sort(function(a, b) {
+  sortedStudies.sort(function (a, b) {
     let fieldA = a[field];
     let fieldB = b[field];
     if (field === 'StudyDate') {
